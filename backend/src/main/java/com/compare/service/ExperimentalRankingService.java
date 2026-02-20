@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -26,24 +27,23 @@ public class ExperimentalRankingService implements RankingService {
 
         log.info("Using EXPERIMENTAL ranking algorithm");
 
-        double maxPrice = results.stream().mapToDouble(QuoteResult::getAnnualPrice).max().orElse(1);
-        double minPrice = results.stream().mapToDouble(QuoteResult::getAnnualPrice).min().orElse(0);
+        double maxPrice = results.stream().mapToDouble(QuoteResult::annualPrice).max().orElse(1);
+        double minPrice = results.stream().mapToDouble(QuoteResult::annualPrice).min().orElse(0);
         double priceRange = maxPrice - minPrice;
         if (priceRange == 0) priceRange = 1;
 
-        double maxRating = results.stream().mapToDouble(QuoteResult::getRating).max().orElse(1);
-        double minRating = results.stream().mapToDouble(QuoteResult::getRating).min().orElse(0);
+        double maxRating = results.stream().mapToDouble(QuoteResult::rating).max().orElse(1);
+        double minRating = results.stream().mapToDouble(QuoteResult::rating).min().orElse(0);
         double ratingRange = maxRating - minRating;
         if (ratingRange == 0) ratingRange = 1;
 
-        // Experimental: boost rating weight, add value-for-money metric
+        List<QuoteResult> scored = new ArrayList<>();
         for (QuoteResult r : results) {
-            double normalizedPrice = 1.0 - (r.getAnnualPrice() - minPrice) / priceRange;
-            double normalizedRating = (r.getRating() - minRating) / ratingRange;
-            double featureScore = calculateFeatureScore(r.getFeatures());
+            double normalizedPrice = 1.0 - (r.annualPrice() - minPrice) / priceRange;
+            double normalizedRating = (r.rating() - minRating) / ratingRange;
+            double featureScore = calculateFeatureScore(r.features());
 
-            // Value-for-money: rating per pound
-            double valueScore = r.getRating() / (r.getAnnualPrice() / 1000.0);
+            double valueScore = r.rating() / (r.annualPrice() / 1000.0);
             double normalizedValue = Math.min(valueScore / 10.0, 1.0);
 
             double score = 0.3 * normalizedPrice
@@ -51,19 +51,32 @@ public class ExperimentalRankingService implements RankingService {
                     + 0.15 * featureScore
                     + 0.2 * normalizedValue;
 
-            r.setScore(Math.round(score * 1000.0) / 1000.0);
+            scored.add(new QuoteResult(
+                    r.providerId(), r.providerName(), r.monthlyPrice(), r.annualPrice(),
+                    r.rating(), r.features(), r.exclusions(), r.coverLevel(),
+                    Math.round(score * 1000.0) / 1000.0, false, false
+            ));
         }
 
-        results.sort(Comparator.comparingDouble(QuoteResult::getScore).reversed());
+        scored.sort(Comparator.comparingDouble(QuoteResult::score).reversed());
 
-        QuoteResult cheapest = results.stream()
-                .min(Comparator.comparingDouble(QuoteResult::getAnnualPrice))
+        QuoteResult cheapest = scored.stream()
+                .min(Comparator.comparingDouble(QuoteResult::annualPrice))
                 .orElse(null);
-        if (cheapest != null) cheapest.setIsBestPrice(true);
 
-        if (!results.isEmpty()) results.get(0).setIsRecommended(true);
+        List<QuoteResult> finalResults = new ArrayList<>();
+        for (int i = 0; i < scored.size(); i++) {
+            QuoteResult r = scored.get(i);
+            boolean isBest = cheapest != null && r.providerId().equals(cheapest.providerId());
+            boolean isRec = i == 0;
+            finalResults.add(new QuoteResult(
+                    r.providerId(), r.providerName(), r.monthlyPrice(), r.annualPrice(),
+                    r.rating(), r.features(), r.exclusions(), r.coverLevel(),
+                    r.score(), isBest, isRec
+            ));
+        }
 
-        return results;
+        return finalResults;
     }
 
     private double calculateFeatureScore(String features) {

@@ -43,39 +43,40 @@ public class QuoteApiController {
         QuoteRequest request = mapToQuoteRequest(dto);
         List<QuoteResult> results = quoteService.getQuotes(request);
 
-        QuoteResultDto response = new QuoteResultDto();
-        response.setQuoteId(UUID.randomUUID().toString().substring(0, 8));
-        response.setTotalResults(results.size());
-        response.setSortedBy("score");
-        response.setResults(results.stream().map(this::mapToItemDto).collect(Collectors.toList()));
+        QuoteResultDto response = new QuoteResultDto(
+                UUID.randomUUID().toString().substring(0, 8),
+                results.stream().map(this::mapToItemDto).collect(Collectors.toList()),
+                results.size(),
+                "score"
+        );
 
         return ResponseEntity.ok(response);
     }
 
     private QuoteRequest mapToQuoteRequest(QuoteRequestDto dto) {
         return new QuoteRequest(
-                dto.getDriverAge(),
-                dto.getCarValue(),
-                dto.getPostcode(),
-                dto.getAnnualMileage(),
-                dto.getClaimsInLastFiveYears(),
-                dto.getCoverLevel()
+                dto.driverAge(),
+                dto.carValue(),
+                dto.postcode(),
+                dto.annualMileage(),
+                dto.claimsInLastFiveYears(),
+                dto.coverLevel()
         );
     }
 
     private QuoteResultDto.QuoteItemDto mapToItemDto(QuoteResult r) {
-        QuoteResultDto.QuoteItemDto item = new QuoteResultDto.QuoteItemDto();
-        item.setProviderId(r.getProviderId());
-        item.setProviderName(r.getProviderName());
-        item.setMonthlyPrice(r.getMonthlyPrice());
-        item.setAnnualPrice(r.getAnnualPrice());
-        item.setRating(r.getRating());
-        item.setFeatures(r.getFeatures());
-        item.setExclusions(r.getExclusions());
-        item.setCoverLevel(r.getCoverLevel());
-        item.setScore(r.getScore());
-        item.setBestPrice(r.getIsBestPrice());
-        item.setRecommended(r.getIsRecommended());
-        return item;
+        return new QuoteResultDto.QuoteItemDto(
+                r.providerId(),
+                r.providerName(),
+                r.monthlyPrice(),
+                r.annualPrice(),
+                r.rating(),
+                r.features(),
+                r.exclusions(),
+                r.coverLevel(),
+                r.score(),
+                r.isBestPrice(),
+                r.isRecommended()
+        );
     }
 }

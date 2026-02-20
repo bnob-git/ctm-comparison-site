@@ -53,15 +53,19 @@ public class DefaultPricingEngine implements PricingEngine {
 
             double monthlyPrice = Math.round((annualPrice / 12.0 * 1.05) * 100.0) / 100.0;
 
-            QuoteResult result = new QuoteResult();
-            result.setProviderId(provider.getId());
-            result.setProviderName(provider.getName());
-            result.setAnnualPrice(annualPrice);
-            result.setMonthlyPrice(monthlyPrice);
-            result.setRating(provider.getRating());
-            result.setFeatures(provider.getFeatures());
-            result.setExclusions(provider.getExclusions());
-            result.setCoverLevel(request.getCoverLevel());
+            QuoteResult result = new QuoteResult(
+                    provider.getId(),
+                    provider.getName(),
+                    monthlyPrice,
+                    annualPrice,
+                    provider.getRating(),
+                    provider.getFeatures(),
+                    provider.getExclusions(),
+                    request.getCoverLevel(),
+                    0.0,
+                    false,
+                    false
+            );
 
             log.debug("Provider {}: annual={}, monthly={}", provider.getName(), annualPrice, monthlyPrice);
             results.add(result);

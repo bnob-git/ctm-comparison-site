@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -24,44 +25,57 @@ public class DefaultRankingService implements RankingService {
     public List<QuoteResult> rank(List<QuoteResult> results) {
         if (results.isEmpty()) return results;
 
-        double maxPrice = results.stream().mapToDouble(QuoteResult::getAnnualPrice).max().orElse(1);
-        double minPrice = results.stream().mapToDouble(QuoteResult::getAnnualPrice).min().orElse(0);
+        double maxPrice = results.stream().mapToDouble(QuoteResult::annualPrice).max().orElse(1);
+        double minPrice = results.stream().mapToDouble(QuoteResult::annualPrice).min().orElse(0);
         double priceRange = maxPrice - minPrice;
         if (priceRange == 0) priceRange = 1;
 
-        double maxRating = results.stream().mapToDouble(QuoteResult::getRating).max().orElse(1);
-        double minRating = results.stream().mapToDouble(QuoteResult::getRating).min().orElse(0);
+        double maxRating = results.stream().mapToDouble(QuoteResult::rating).max().orElse(1);
+        double minRating = results.stream().mapToDouble(QuoteResult::rating).min().orElse(0);
         double ratingRange = maxRating - minRating;
         if (ratingRange == 0) ratingRange = 1;
 
+        List<QuoteResult> scored = new ArrayList<>();
         for (QuoteResult r : results) {
-            double normalizedPrice = 1.0 - (r.getAnnualPrice() - minPrice) / priceRange;
-            double normalizedRating = (r.getRating() - minRating) / ratingRange;
-            double featureScore = calculateFeatureScore(r.getFeatures());
+            double normalizedPrice = 1.0 - (r.annualPrice() - minPrice) / priceRange;
+            double normalizedRating = (r.rating() - minRating) / ratingRange;
+            double featureScore = calculateFeatureScore(r.features());
 
             double score = rankingConfig.getPriceWeight() * normalizedPrice
                     + rankingConfig.getRatingWeight() * normalizedRating
                     + rankingConfig.getFeatureWeight() * featureScore;
 
-            r.setScore(Math.round(score * 1000.0) / 1000.0);
+            scored.add(new QuoteResult(
+                    r.providerId(), r.providerName(), r.monthlyPrice(), r.annualPrice(),
+                    r.rating(), r.features(), r.exclusions(), r.coverLevel(),
+                    Math.round(score * 1000.0) / 1000.0, false, false
+            ));
         }
 
-        results.sort(Comparator.comparingDouble(QuoteResult::getScore).reversed());
+        scored.sort(Comparator.comparingDouble(QuoteResult::score).reversed());
 
-        // Mark best price and recommended
-        QuoteResult cheapest = results.stream()
-                .min(Comparator.comparingDouble(QuoteResult::getAnnualPrice))
+        QuoteResult cheapest = scored.stream()
+                .min(Comparator.comparingDouble(QuoteResult::annualPrice))
                 .orElse(null);
-        if (cheapest != null) cheapest.setIsBestPrice(true);
 
-        if (!results.isEmpty()) results.get(0).setIsRecommended(true);
+        List<QuoteResult> finalResults = new ArrayList<>();
+        for (int i = 0; i < scored.size(); i++) {
+            QuoteResult r = scored.get(i);
+            boolean isBest = cheapest != null && r.providerId().equals(cheapest.providerId());
+            boolean isRec = i == 0;
+            finalResults.add(new QuoteResult(
+                    r.providerId(), r.providerName(), r.monthlyPrice(), r.annualPrice(),
+                    r.rating(), r.features(), r.exclusions(), r.coverLevel(),
+                    r.score(), isBest, isRec
+            ));
+        }
 
         log.info("Ranked {} results. Best price: {}, Recommended: {}",
-                results.size(),
-                cheapest != null ? cheapest.getProviderName() : "none",
-                results.get(0).getProviderName());
+                finalResults.size(),
+                cheapest != null ? cheapest.providerName() : "none",
+                finalResults.isEmpty() ? "none" : finalResults.get(0).providerName());
 
-        return results;
+        return finalResults;
     }
 
     private double calculateFeatureScore(String features) {

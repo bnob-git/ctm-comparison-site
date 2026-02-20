@@ -32,15 +32,10 @@ class QuoteApiControllerTest {
 
     @Test
     void shouldReturnQuotesForValidRequest() throws Exception {
-        QuoteResult result = new QuoteResult();
-        result.setProviderId(1L);
-        result.setProviderName("TestProvider");
-        result.setAnnualPrice(500.0);
-        result.setMonthlyPrice(43.75);
-        result.setRating(4.5);
-        result.setFeatures("Feature1");
-        result.setCoverLevel("comprehensive");
-        result.setScore(0.8);
+        QuoteResult result = new QuoteResult(
+                1L, "TestProvider", 43.75, 500.0, 4.5,
+                "Feature1", null, "comprehensive", 0.8, false, false
+        );
 
         when(quoteService.getQuotes(any())).thenReturn(List.of(result));
 
