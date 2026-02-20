@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title th:text="${provider.name}">Provider Details</title>
+</head>
+<body>
+<main layout:fragment="content">
+    <div class="mb-3">
+        <a href="javascript:history.back()" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left me-1"></i>Back to Results
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h3 class="mb-0" th:text="${provider.name}">Provider Name</h3>
+                    <div>
+                        <span class="text-warning" th:each="i : ${#numbers.sequence(1, 5)}">
+                            <i th:classappend="${i <= provider.rating} ? 'bi-star-fill' : 'bi-star'"
+                               class="bi"></i>
+                        </span>
+                        <span class="ms-1" th:text="${provider.rating}">4.0</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h5 class="mb-3"><i class="bi bi-check-circle text-success me-2"></i>Features</h5>
+                    <div class="mb-4" th:if="${provider.features != null}">
+                        <div th:each="feature : ${provider.features.split(',')}" class="d-flex align-items-center mb-2">
+                            <i class="bi bi-check-lg text-success me-2"></i>
+                            <span th:text="${feature.trim()}">Feature</span>
+                        </div>
+                    </div>
+
+                    <h5 class="mb-3"><i class="bi bi-x-circle text-danger me-2"></i>Exclusions</h5>
+                    <div class="mb-4" th:if="${provider.exclusions != null}">
+                        <div th:each="exclusion : ${provider.exclusions.split(',')}" class="d-flex align-items-center mb-2">
+                            <i class="bi bi-x-lg text-danger me-2"></i>
+                            <span th:text="${exclusion.trim()}">Exclusion</span>
+                        </div>
+                    </div>
+
+                    <h5 class="mb-3"><i class="bi bi-info-circle text-info me-2"></i>Assumptions</h5>
+                    <div th:if="${provider.assumptions != null}">
+                        <div th:each="assumption : ${provider.assumptions.split(',')}" class="d-flex align-items-center mb-2">
+                            <i class="bi bi-dot text-info me-2"></i>
+                            <span th:text="${assumption.trim()}">Assumption</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-layers me-2"></i>Coverage Options</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Cover Level</th>
+                                    <th>Multiplier</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="option : ${provider.coverageOptions}">
+                                    <td>
+                                        <span class="badge"
+                                              th:classappend="${option.coverLevel == 'comprehensive'} ? 'bg-primary' : (${option.coverLevel == 'tp_fire_theft'} ? 'bg-info' : 'bg-secondary')"
+                                              th:text="${option.coverLevel == 'third_party'} ? 'Third Party' : (${option.coverLevel == 'tp_fire_theft'} ? 'TP Fire &amp; Theft' : 'Comprehensive')">Level</span>
+                                    </td>
+                                    <td th:text="${'x' + option.coverMultiplier}">x1.0</td>
+                                    <td th:text="${option.description}">Description</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card shadow-sm mb-4 border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-calculator me-2"></i>Pricing Parameters</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-sm mb-0">
+                        <tr>
+                            <td class="fw-bold">Base Rate</td>
+                            <td class="text-end">&pound;<span th:text="${#numbers.formatDecimal(provider.baseRate, 1, 2)}">0.00</span></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Risk Multiplier</td>
+                            <td class="text-end" th:text="${'x' + provider.riskMultiplier}">x1.0</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Fixed Fee</td>
+                            <td class="text-end">&pound;<span th:text="${#numbers.formatDecimal(provider.fixedFee, 1, 2)}">0.00</span></td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Rating</td>
+                            <td class="text-end" th:text="${provider.rating + ' / 5.0'}">4.0 / 5.0</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2">
+                <a th:href="@{/apply}" class="btn btn-primary btn-lg">
+                    <i class="bi bi-arrow-right me-2"></i>Start Application
+                </a>
+                <a th:href="@{/quote}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-2"></i>Get New Quote
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+</html>

@@ -1,0 +1,122 @@
+[
+  {
+    "name": "SafeDrive",
+    "baseRate": 320.0,
+    "riskMultiplier": 1.0,
+    "fixedFee": 45.0,
+    "rating": 4.5,
+    "features": "Roadside assistance,Courtesy car,Windscreen cover,Personal accident cover,Legal expenses",
+    "exclusions": "Track day use,Business use without declaration,Modifications not declared",
+    "assumptions": "No motoring convictions,Vehicle kept at home address,Main driver is policyholder",
+    "coverageOptions": [
+      {"coverLevel": "third_party", "coverMultiplier": 1.0, "description": "Basic third party cover - covers damage to other people and their property"},
+      {"coverLevel": "tp_fire_theft", "coverMultiplier": 1.2, "description": "Third party plus fire and theft protection for your vehicle"},
+      {"coverLevel": "comprehensive", "coverMultiplier": 1.5, "description": "Full comprehensive cover including own damage"}
+    ]
+  },
+  {
+    "name": "QuickCover",
+    "baseRate": 280.0,
+    "riskMultiplier": 1.05,
+    "fixedFee": 30.0,
+    "rating": 3.8,
+    "features": "Online claims portal,24/7 helpline,Windscreen cover",
+    "exclusions": "No courtesy car,Track day use,Vehicles over 15 years old",
+    "assumptions": "Standard security,Main driver aged 21+,UK mainland only",
+    "coverageOptions": [
+      {"coverLevel": "third_party", "coverMultiplier": 1.0, "description": "Essential third party only cover"},
+      {"coverLevel": "tp_fire_theft", "coverMultiplier": 1.15, "description": "Third party fire and theft cover"},
+      {"coverLevel": "comprehensive", "coverMultiplier": 1.45, "description": "Full cover with online-first claims"}
+    ]
+  },
+  {
+    "name": "BudgetShield",
+    "baseRate": 250.0,
+    "riskMultiplier": 1.1,
+    "fixedFee": 20.0,
+    "rating": 3.2,
+    "features": "Low excess option,Online management,Basic roadside",
+    "exclusions": "No personal accident,No legal expenses,Vehicles over £40k not covered",
+    "assumptions": "No claims in last 3 years for best rate,Standard vehicle only",
+    "coverageOptions": [
+      {"coverLevel": "third_party", "coverMultiplier": 1.0, "description": "Budget-friendly third party cover"},
+      {"coverLevel": "tp_fire_theft", "coverMultiplier": 1.18, "description": "Affordable fire and theft protection"},
+      {"coverLevel": "comprehensive", "coverMultiplier": 1.55, "description": "Value comprehensive cover"}
+    ]
+  },
+  {
+    "name": "PremiumGuard",
+    "baseRate": 420.0,
+    "riskMultiplier": 0.9,
+    "fixedFee": 60.0,
+    "rating": 4.8,
+    "features": "Guaranteed courtesy car,Protected no-claims,Personal accident cover,Legal expenses,Key cover,Breakdown cover,Windscreen cover,New car replacement",
+    "exclusions": "Track day use,Unlicensed drivers",
+    "assumptions": "Vehicle garaged overnight,Named drivers only",
+    "coverageOptions": [
+      {"coverLevel": "third_party", "coverMultiplier": 1.0, "description": "Premium third party with added benefits"},
+      {"coverLevel": "tp_fire_theft", "coverMultiplier": 1.25, "description": "Enhanced fire and theft cover"},
+      {"coverLevel": "comprehensive", "coverMultiplier": 1.4, "description": "Premium comprehensive with all extras included"}
+    ]
+  },
+  {
+    "name": "EcoInsure",
+    "baseRate": 300.0,
+    "riskMultiplier": 0.95,
+    "fixedFee": 35.0,
+    "rating": 4.1,
+    "features": "Green repair network,Carbon offset,Courtesy electric car,Windscreen cover,Paperless discount",
+    "exclusions": "Diesel vehicles over 10 years,Modifications,Commercial use",
+    "assumptions": "Annual mileage under 15000,Vehicle under 10 years old",
+    "coverageOptions": [
+      {"coverLevel": "third_party", "coverMultiplier": 1.0, "description": "Eco-friendly basic cover"},
+      {"coverLevel": "tp_fire_theft", "coverMultiplier": 1.2, "description": "Green fire and theft protection"},
+      {"coverLevel": "comprehensive", "coverMultiplier": 1.48, "description": "Full cover with eco benefits and carbon offset"}
+    ]
+  },
+  {
+    "name": "UrbanProtect",
+    "baseRate": 340.0,
+    "riskMultiplier": 1.02,
+    "fixedFee": 40.0,
+    "rating": 4.0,
+    "features": "City parking cover,Theft hotspot protection,Dashcam discount,24/7 claims,Windscreen cover",
+    "exclusions": "Rural area surcharge applies,Vehicles over 20 years old,Kit cars",
+    "assumptions": "Vehicle primarily used in urban areas,Standard security minimum",
+    "coverageOptions": [
+      {"coverLevel": "third_party", "coverMultiplier": 1.0, "description": "City-optimized third party cover"},
+      {"coverLevel": "tp_fire_theft", "coverMultiplier": 1.22, "description": "Urban fire and theft with hotspot protection"},
+      {"coverLevel": "comprehensive", "coverMultiplier": 1.5, "description": "Full urban protection with city-specific benefits"}
+    ]
+  },
+  {
+    "name": "CountryMutual",
+    "baseRate": 290.0,
+    "riskMultiplier": 0.98,
+    "fixedFee": 25.0,
+    "rating": 4.3,
+    "features": "Agricultural vehicle add-on,Rural breakdown,Courtesy car,Personal belongings cover,Legal expenses",
+    "exclusions": "Vehicles used primarily in London,Fleet vehicles",
+    "assumptions": "Vehicle kept at residential address,Low crime area discount available",
+    "coverageOptions": [
+      {"coverLevel": "third_party", "coverMultiplier": 1.0, "description": "Rural-friendly third party cover"},
+      {"coverLevel": "tp_fire_theft", "coverMultiplier": 1.15, "description": "Country fire and theft cover"},
+      {"coverLevel": "comprehensive", "coverMultiplier": 1.42, "description": "Comprehensive cover with rural benefits"}
+    ]
+  },
+  {
+    "name": "TechSure",
+    "baseRate": 310.0,
+    "riskMultiplier": 1.0,
+    "fixedFee": 50.0,
+    "rating": 4.2,
+    "features": "Telematics discount,App-based claims,Real-time tracking,Driving score rewards,Windscreen cover,Cyber cover",
+    "exclusions": "Must use telematics device,Vehicles without OBD port,Classic cars",
+    "assumptions": "Telematics box fitted within 14 days,Driving data shared with insurer",
+    "coverageOptions": [
+      {"coverLevel": "third_party", "coverMultiplier": 1.0, "description": "Smart third party with telematics benefits"},
+      {"coverLevel": "tp_fire_theft", "coverMultiplier": 1.18, "description": "Tech-enhanced fire and theft cover"},
+      {"coverLevel": "comprehensive", "coverMultiplier": 1.45, "description": "Full smart cover with driving rewards and app management"}
+    ]
+  }
+]

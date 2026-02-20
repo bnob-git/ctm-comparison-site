@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Quote Results</title>
+</head>
+<body>
+<main layout:fragment="content">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2><i class="bi bi-list-check me-2"></i>Your Quotes</h2>
+            <p class="text-muted mb-0">
+                Found <strong th:text="${totalResults}">0</strong> quotes for
+                <span th:text="${quoteRequest.coverLevel == 'third_party'} ? 'Third Party' : (${quoteRequest.coverLevel == 'tp_fire_theft'} ? 'Third Party, Fire &amp; Theft' : 'Comprehensive')">cover</span>
+                cover
+            </p>
+        </div>
+        <a th:href="@{/quote}" class="btn btn-outline-primary">
+            <i class="bi bi-arrow-left me-1"></i>New Quote
+        </a>
+    </div>
+
+    <div class="row mb-3">
+        <div class="col-md-4">
+            <label for="sortBy" class="form-label fw-bold">Sort by:</label>
+            <select id="sortBy" class="form-select" onchange="sortResults(this.value)">
+                <option value="score">Recommended</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+                <option value="rating">Rating: High to Low</option>
+            </select>
+        </div>
+    </div>
+
+    <div id="resultsContainer">
+        <div th:each="result : ${results}" class="card shadow-sm mb-3 result-card"
+             th:data-price="${result.annualPrice}"
+             th:data-rating="${result.rating}"
+             th:data-score="${result.score}">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-3">
+                        <h5 class="card-title mb-1" th:text="${result.providerName}">Provider</h5>
+                        <div class="mb-2">
+                            <span class="text-warning" th:each="i : ${#numbers.sequence(1, 5)}">
+                                <i th:classappend="${i <= result.rating} ? 'bi-star-fill' : 'bi-star'"
+                                   class="bi"></i>
+                            </span>
+                            <small class="text-muted ms-1" th:text="${result.rating}">4.0</small>
+                        </div>
+                        <div th:if="${result.isBestPrice}">
+                            <span class="badge bg-success"><i class="bi bi-tag me-1"></i>Best Price</span>
+                        </div>
+                        <div th:if="${result.isRecommended}">
+                            <span class="badge bg-primary"><i class="bi bi-trophy me-1"></i>Recommended</span>
+                        </div>
+                    </div>
+                    <div class="col-md-3 text-center">
+                        <div class="display-6 fw-bold text-primary">
+                            &pound;<span th:text="${#numbers.formatDecimal(result.monthlyPrice, 1, 2)}">0.00</span>
+                        </div>
+                        <small class="text-muted">per month</small>
+                        <div class="mt-1">
+                            <span class="text-muted">&pound;<span th:text="${#numbers.formatDecimal(result.annualPrice, 1, 2)}">0.00</span>/year</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-2">
+                            <small class="fw-bold text-muted">Key Features:</small>
+                            <div th:if="${result.features != null}">
+                                <span th:each="feature : ${result.features.split(',')}"
+                                      class="badge bg-light text-dark border me-1 mb-1"
+                                      th:text="${feature.trim()}">Feature</span>
+                            </div>
+                        </div>
+                        <div>
+                            <small class="text-muted">Score: <span th:text="${result.score}">0</span></small>
+                        </div>
+                    </div>
+                    <div class="col-md-2 text-end">
+                        <a th:href="@{/provider/{id}(id=${result.providerId})}"
+                           class="btn btn-outline-primary mb-2 w-100">
+                            <i class="bi bi-info-circle me-1"></i>Details
+                        </a>
+                        <a th:href="@{/apply}" class="btn btn-primary w-100">
+                            <i class="bi bi-arrow-right me-1"></i>Apply
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${#lists.isEmpty(results)}" class="alert alert-warning text-center">
+        <i class="bi bi-exclamation-triangle me-2"></i>
+        No quotes found for your criteria. Please try different options.
+    </div>
+</main>
+</body>
+</html>

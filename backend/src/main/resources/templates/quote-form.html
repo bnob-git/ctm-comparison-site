@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Get a Quote</title>
+</head>
+<body>
+<main layout:fragment="content">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h2 class="mb-4"><i class="bi bi-car-front me-2"></i>Get Your Car Insurance Quote</h2>
+            <p class="text-muted mb-4">Fill in your details below to compare quotes from our providers.</p>
+
+            <form th:action="@{/quote}" th:object="${quoteRequest}" method="post" id="quoteForm" novalidate>
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="bi bi-person me-2"></i>Driver Details</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="driverAge" class="form-label">Driver Age</label>
+                                <input type="number" class="form-control" id="driverAge"
+                                       th:field="*{driverAge}" min="17" max="99"
+                                       th:classappend="${#fields.hasErrors('driverAge')} ? 'is-invalid'"
+                                       placeholder="e.g. 30" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('driverAge')}"
+                                     th:errors="*{driverAge}">Age error</div>
+                                <div class="form-text">Must be between 17 and 99</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="postcode" class="form-label">Postcode</label>
+                                <input type="text" class="form-control" id="postcode"
+                                       th:field="*{postcode}"
+                                       th:classappend="${#fields.hasErrors('postcode')} ? 'is-invalid'"
+                                       placeholder="e.g. SW1A 1AA" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('postcode')}"
+                                     th:errors="*{postcode}">Postcode error</div>
+                                <div class="form-text">Valid UK postcode</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="bi bi-car-front me-2"></i>Vehicle Details</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="carValue" class="form-label">Car Value (&pound;)</label>
+                                <input type="number" class="form-control" id="carValue"
+                                       th:field="*{carValue}" min="500" max="200000"
+                                       th:classappend="${#fields.hasErrors('carValue')} ? 'is-invalid'"
+                                       placeholder="e.g. 15000" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('carValue')}"
+                                     th:errors="*{carValue}">Car value error</div>
+                                <div class="form-text">&pound;500 &ndash; &pound;200,000</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="annualMileage" class="form-label">Annual Mileage</label>
+                                <input type="number" class="form-control" id="annualMileage"
+                                       th:field="*{annualMileage}" min="0" max="100000"
+                                       th:classappend="${#fields.hasErrors('annualMileage')} ? 'is-invalid'"
+                                       placeholder="e.g. 10000" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('annualMileage')}"
+                                     th:errors="*{annualMileage}">Mileage error</div>
+                                <div class="form-text">0 &ndash; 100,000 miles</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0"><i class="bi bi-shield me-2"></i>Cover Details</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="claimsInLastFiveYears" class="form-label">Claims in Last 5 Years</label>
+                                <select class="form-select" id="claimsInLastFiveYears"
+                                        th:field="*{claimsInLastFiveYears}"
+                                        th:classappend="${#fields.hasErrors('claimsInLastFiveYears')} ? 'is-invalid'">
+                                    <option value="0">0 - None</option>
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5+</option>
+                                </select>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('claimsInLastFiveYears')}"
+                                     th:errors="*{claimsInLastFiveYears}">Claims error</div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="coverLevel" class="form-label">Cover Level</label>
+                                <select class="form-select" id="coverLevel"
+                                        th:field="*{coverLevel}"
+                                        th:classappend="${#fields.hasErrors('coverLevel')} ? 'is-invalid'">
+                                    <option value="">-- Select cover level --</option>
+                                    <option value="third_party">Third Party Only</option>
+                                    <option value="tp_fire_theft">Third Party, Fire &amp; Theft</option>
+                                    <option value="comprehensive">Comprehensive</option>
+                                </select>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('coverLevel')}"
+                                     th:errors="*{coverLevel}">Cover level error</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary btn-lg px-5">
+                        <i class="bi bi-search me-2"></i>Compare Quotes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+</body>
+</html>

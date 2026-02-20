@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Start Application</title>
+</head>
+<body>
+<main layout:fragment="content">
+    <div class="text-center py-5">
+        <div class="display-1 text-muted mb-4"><i class="bi bi-cone-striped"></i></div>
+        <h2 class="mb-3">Application Placeholder</h2>
+        <p class="lead text-muted mb-4" style="max-width: 500px; margin: 0 auto;">
+            This is where the real application process would begin. In a production system,
+            you would be redirected to the provider's application form.
+        </p>
+        <div class="alert alert-warning d-inline-block" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            <strong>Demo Only:</strong> No real application will be submitted. This is a prototype.
+        </div>
+        <div class="mt-4">
+            <a th:href="@{/quote}" class="btn btn-primary btn-lg me-2">
+                <i class="bi bi-arrow-left me-2"></i>Get Another Quote
+            </a>
+            <a th:href="@{/}" class="btn btn-outline-secondary btn-lg">
+                <i class="bi bi-house me-2"></i>Back to Home
+            </a>
+        </div>
+    </div>
+</main>
+</body>
+</html>

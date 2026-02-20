@@ -1,0 +1,37 @@
+# Maven
+backend/target/
+*.jar
+*.war
+*.ear
+
+# Maven wrapper (jar is downloaded, script is committed)
+backend/.mvn/wrapper/maven-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# H2 database files
+*.db
+*.mv.db
+*.trace.db
+
+# Compiled classes
+*.class
+
+# Windsurf
+.windsurf/

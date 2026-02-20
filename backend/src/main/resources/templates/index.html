@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Home</title>
+</head>
+<body>
+<main layout:fragment="content">
+    <div class="text-center py-5">
+        <h1 class="display-4 fw-bold text-primary mb-3">
+            <i class="bi bi-shield-check me-2"></i>Compare Car Insurance
+        </h1>
+        <p class="lead text-muted mb-4" style="max-width: 600px; margin: 0 auto;">
+            Find the best car insurance deal in seconds. Compare quotes from 8 trusted providers,
+            ranked by price, rating, and features.
+        </p>
+        <div class="mb-5">
+            <a th:href="@{/quote}" class="btn btn-primary btn-lg px-5 py-3">
+                <i class="bi bi-search me-2"></i>Get a Quote
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-5">
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm text-center p-4">
+                <div class="card-body">
+                    <div class="display-6 text-primary mb-3"><i class="bi bi-lightning-charge"></i></div>
+                    <h5 class="card-title">Quick Comparison</h5>
+                    <p class="card-text text-muted">Enter your details once and instantly compare quotes from multiple providers.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm text-center p-4">
+                <div class="card-body">
+                    <div class="display-6 text-primary mb-3"><i class="bi bi-star"></i></div>
+                    <h5 class="card-title">Smart Ranking</h5>
+                    <p class="card-text text-muted">Our algorithm weighs price, provider rating, and features to find your best match.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm text-center p-4">
+                <div class="card-body">
+                    <div class="display-6 text-primary mb-3"><i class="bi bi-eye"></i></div>
+                    <h5 class="card-title">Transparent Details</h5>
+                    <p class="card-text text-muted">See full breakdowns, features, exclusions, and assumptions before you choose.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="alert alert-info text-center" role="alert">
+        <i class="bi bi-info-circle me-2"></i>
+        <strong>Prototype Notice:</strong> This is a demonstration MVP. All providers, prices, and data are synthetic.
+        No real insurance products are offered.
+    </div>
+</main>
+</body>
+</html>
