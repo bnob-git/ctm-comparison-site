@@ -29,7 +29,7 @@ public class QuoteWebController {
 
     @GetMapping("/quote")
     public String showQuoteForm(Model model) {
-        model.addAttribute("quoteRequest", new QuoteRequestDto());
+        model.addAttribute("quoteRequest", new QuoteRequestDto(0, 0, "", 0, 0, ""));
         return "quote-form";
     }
 
@@ -42,12 +42,12 @@ public class QuoteWebController {
         }
 
         QuoteRequest request = new QuoteRequest(
-                dto.getDriverAge(),
-                dto.getCarValue(),
-                dto.getPostcode(),
-                dto.getAnnualMileage(),
-                dto.getClaimsInLastFiveYears(),
-                dto.getCoverLevel()
+                dto.driverAge(),
+                dto.carValue(),
+                dto.postcode(),
+                dto.annualMileage(),
+                dto.claimsInLastFiveYears(),
+                dto.coverLevel()
         );
 
         List<QuoteResult> results = quoteService.getQuotes(request);

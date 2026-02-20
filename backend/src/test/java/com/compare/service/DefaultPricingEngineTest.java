@@ -28,9 +28,9 @@ class DefaultPricingEngineTest {
         List<QuoteResult> results = pricingEngine.calculateQuotes(request, providers);
 
         assertEquals(1, results.size());
-        assertEquals("TestProvider", results.get(0).getProviderName());
-        assertTrue(results.get(0).getAnnualPrice() > 0);
-        assertTrue(results.get(0).getMonthlyPrice() > 0);
+        assertEquals("TestProvider", results.get(0).providerName());
+        assertTrue(results.get(0).annualPrice() > 0);
+        assertTrue(results.get(0).monthlyPrice() > 0);
     }
 
     @Test
@@ -55,7 +55,7 @@ class DefaultPricingEngineTest {
         List<QuoteResult> youngResults = pricingEngine.calculateQuotes(youngDriver, providers);
         List<QuoteResult> olderResults = pricingEngine.calculateQuotes(olderDriver, providers);
 
-        assertTrue(youngResults.get(0).getAnnualPrice() > olderResults.get(0).getAnnualPrice(),
+        assertTrue(youngResults.get(0).annualPrice() > olderResults.get(0).annualPrice(),
                 "Young drivers should pay more");
     }
 
@@ -69,7 +69,7 @@ class DefaultPricingEngineTest {
         List<QuoteResult> noClaimsResults = pricingEngine.calculateQuotes(noClaims, providers);
         List<QuoteResult> twoClaimsResults = pricingEngine.calculateQuotes(twoClaims, providers);
 
-        assertTrue(twoClaimsResults.get(0).getAnnualPrice() > noClaimsResults.get(0).getAnnualPrice(),
+        assertTrue(twoClaimsResults.get(0).annualPrice() > noClaimsResults.get(0).annualPrice(),
                 "More claims should increase price");
     }
 
@@ -83,7 +83,7 @@ class DefaultPricingEngineTest {
         List<QuoteResult> lowResults = pricingEngine.calculateQuotes(lowMileage, providers);
         List<QuoteResult> highResults = pricingEngine.calculateQuotes(highMileage, providers);
 
-        assertTrue(highResults.get(0).getAnnualPrice() > lowResults.get(0).getAnnualPrice(),
+        assertTrue(highResults.get(0).annualPrice() > lowResults.get(0).annualPrice(),
                 "Higher mileage should increase price");
     }
 
@@ -95,8 +95,8 @@ class DefaultPricingEngineTest {
         List<QuoteResult> results = pricingEngine.calculateQuotes(request, providers);
         QuoteResult result = results.get(0);
 
-        double expectedMonthly = Math.round((result.getAnnualPrice() / 12.0 * 1.05) * 100.0) / 100.0;
-        assertEquals(expectedMonthly, result.getMonthlyPrice(), 0.01);
+        double expectedMonthly = Math.round((result.annualPrice() / 12.0 * 1.05) * 100.0) / 100.0;
+        assertEquals(expectedMonthly, result.monthlyPrice(), 0.01);
     }
 
     @Test
@@ -107,7 +107,7 @@ class DefaultPricingEngineTest {
         List<QuoteResult> results1 = pricingEngine.calculateQuotes(request, providers);
         List<QuoteResult> results2 = pricingEngine.calculateQuotes(request, providers);
 
-        assertEquals(results1.get(0).getAnnualPrice(), results2.get(0).getAnnualPrice(),
+        assertEquals(results1.get(0).annualPrice(), results2.get(0).annualPrice(),
                 "Same inputs should produce same prices (deterministic)");
     }
 

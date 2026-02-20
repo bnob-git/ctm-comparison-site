@@ -34,12 +34,12 @@ class DefaultRankingServiceTest {
         List<QuoteResult> results = createSampleResults();
         List<QuoteResult> ranked = rankingService.rank(results);
 
-        long bestPriceCount = ranked.stream().filter(QuoteResult::getIsBestPrice).count();
+        long bestPriceCount = ranked.stream().filter(QuoteResult::isBestPrice).count();
         assertEquals(1, bestPriceCount, "Exactly one result should be marked as best price");
 
-        QuoteResult bestPrice = ranked.stream().filter(QuoteResult::getIsBestPrice).findFirst().orElseThrow();
-        double minPrice = ranked.stream().mapToDouble(QuoteResult::getAnnualPrice).min().orElse(0);
-        assertEquals(minPrice, bestPrice.getAnnualPrice(), "Best price should be the cheapest");
+        QuoteResult bestPrice = ranked.stream().filter(QuoteResult::isBestPrice).findFirst().orElseThrow();
+        double minPrice = ranked.stream().mapToDouble(QuoteResult::annualPrice).min().orElse(0);
+        assertEquals(minPrice, bestPrice.annualPrice(), "Best price should be the cheapest");
     }
 
     @Test
@@ -47,8 +47,8 @@ class DefaultRankingServiceTest {
         List<QuoteResult> results = createSampleResults();
         List<QuoteResult> ranked = rankingService.rank(results);
 
-        assertTrue(ranked.get(0).getIsRecommended(), "First result should be recommended");
-        long recommendedCount = ranked.stream().filter(QuoteResult::getIsRecommended).count();
+        assertTrue(ranked.get(0).isRecommended(), "First result should be recommended");
+        long recommendedCount = ranked.stream().filter(QuoteResult::isRecommended).count();
         assertEquals(1, recommendedCount, "Exactly one result should be recommended");
     }
 
@@ -58,8 +58,8 @@ class DefaultRankingServiceTest {
         List<QuoteResult> ranked = rankingService.rank(results);
 
         for (QuoteResult r : ranked) {
-            assertTrue(r.getScore() >= 0 && r.getScore() <= 1.0,
-                    "Score should be between 0 and 1: " + r.getScore());
+            assertTrue(r.score() >= 0 && r.score() <= 1.0,
+                    "Score should be between 0 and 1: " + r.score());
         }
     }
 
@@ -69,57 +69,30 @@ class DefaultRankingServiceTest {
         List<QuoteResult> ranked = rankingService.rank(results);
 
         for (int i = 0; i < ranked.size() - 1; i++) {
-            assertTrue(ranked.get(i).getScore() >= ranked.get(i + 1).getScore(),
+            assertTrue(ranked.get(i).score() >= ranked.get(i + 1).score(),
                     "Results should be sorted by score descending");
         }
     }
 
     @Test
     void shouldHandleSingleResult() {
-        QuoteResult result = new QuoteResult();
-        result.setProviderId(1L);
-        result.setProviderName("Solo");
-        result.setAnnualPrice(500);
-        result.setRating(4.0);
-        result.setFeatures("Feature1,Feature2");
+        QuoteResult result = new QuoteResult(
+                1L, "Solo", 0, 500, 4.0,
+                "Feature1,Feature2", null, null, 0, false, false
+        );
 
         List<QuoteResult> ranked = rankingService.rank(new ArrayList<>(List.of(result)));
 
         assertEquals(1, ranked.size());
-        assertTrue(ranked.get(0).getIsBestPrice());
-        assertTrue(ranked.get(0).getIsRecommended());
+        assertTrue(ranked.get(0).isBestPrice());
+        assertTrue(ranked.get(0).isRecommended());
     }
 
     private List<QuoteResult> createSampleResults() {
         List<QuoteResult> results = new ArrayList<>();
-
-        QuoteResult r1 = new QuoteResult();
-        r1.setProviderId(1L);
-        r1.setProviderName("CheapCo");
-        r1.setAnnualPrice(400);
-        r1.setMonthlyPrice(35);
-        r1.setRating(3.5);
-        r1.setFeatures("Feature1,Feature2");
-        results.add(r1);
-
-        QuoteResult r2 = new QuoteResult();
-        r2.setProviderId(2L);
-        r2.setProviderName("PremiumCo");
-        r2.setAnnualPrice(700);
-        r2.setMonthlyPrice(61.25);
-        r2.setRating(4.8);
-        r2.setFeatures("Feature1,Feature2,Feature3,Feature4,Feature5");
-        results.add(r2);
-
-        QuoteResult r3 = new QuoteResult();
-        r3.setProviderId(3L);
-        r3.setProviderName("MidCo");
-        r3.setAnnualPrice(550);
-        r3.setMonthlyPrice(48.13);
-        r3.setRating(4.0);
-        r3.setFeatures("Feature1,Feature2,Feature3");
-        results.add(r3);
-
+        results.add(new QuoteResult(1L, "CheapCo", 35, 400, 3.5, "Feature1,Feature2", null, null, 0, false, false));
+        results.add(new QuoteResult(2L, "PremiumCo", 61.25, 700, 4.8, "Feature1,Feature2,Feature3,Feature4,Feature5", null, null, 0, false, false));
+        results.add(new QuoteResult(3L, "MidCo", 48.13, 550, 4.0, "Feature1,Feature2,Feature3", null, null, 0, false, false));
         return results;
     }
 }
