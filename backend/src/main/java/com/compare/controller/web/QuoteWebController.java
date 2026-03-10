@@ -1,8 +1,11 @@
 package com.compare.controller.web;
 
-import com.compare.domain.QuoteRequest;
+import com.compare.config.FeatureFlagConfig;
 import com.compare.domain.QuoteResult;
 import com.compare.dto.QuoteRequestDto;
+import com.compare.mapper.QuoteMapper;
+import com.compare.service.GeocodingService;
+import com.compare.service.GeocodingService.GeoLocation;
 import com.compare.service.QuoteService;
 import jakarta.validation.Valid;
 import org.slf4j.Logger;
@@ -22,9 +25,16 @@ public class QuoteWebController {
     private static final Logger log = LoggerFactory.getLogger(QuoteWebController.class);
 
     private final QuoteService quoteService;
+    private final QuoteMapper quoteMapper;
+    private final GeocodingService geocodingService;
+    private final FeatureFlagConfig featureFlagConfig;
 
-    public QuoteWebController(QuoteService quoteService) {
+    public QuoteWebController(QuoteService quoteService, QuoteMapper quoteMapper,
+                              GeocodingService geocodingService, FeatureFlagConfig featureFlagConfig) {
         this.quoteService = quoteService;
+        this.quoteMapper = quoteMapper;
+        this.geocodingService = geocodingService;
+        this.featureFlagConfig = featureFlagConfig;
     }
 
     @GetMapping("/quote")
@@ -41,20 +51,23 @@ public class QuoteWebController {
             return "quote-form";
         }
 
-        QuoteRequest request = new QuoteRequest(
-                dto.getDriverAge(),
-                dto.getCarValue(),
-                dto.getPostcode(),
-                dto.getAnnualMileage(),
-                dto.getClaimsInLastFiveYears(),
-                dto.getCoverLevel()
-        );
-
-        List<QuoteResult> results = quoteService.getQuotes(request);
+        List<QuoteResult> results = quoteService.getQuotes(quoteMapper.toQuoteRequest(dto));
 
         model.addAttribute("results", results);
         model.addAttribute("quoteRequest", dto);
         model.addAttribute("totalResults", results.size());
+
+        boolean mapEnabled = featureFlagConfig.isMapEnabled();
+        model.addAttribute("mapEnabled", mapEnabled);
+
+        if (mapEnabled) {
+            GeoLocation userLocation = geocodingService.geocode(dto.getPostcode());
+            if (userLocation != null) {
+                model.addAttribute("userLat", userLocation.latitude());
+                model.addAttribute("userLng", userLocation.longitude());
+            }
+        }
+
         return "results";
     }
 

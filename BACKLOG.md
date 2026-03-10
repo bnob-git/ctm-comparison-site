@@ -28,8 +28,9 @@ Show success/error toasts on admin actions (feature flag toggle) instead of page
 ### 6. Convert DTOs to Java records — EASY
 Replace `QuoteRequestDto`, `QuoteResultDto`, and `QuoteResult` with Java `record` types.
 
-### 7. Add global exception handler — EASY
-Create `@ControllerAdvice` with handlers for validation errors, 404s, and 500s.
+### 7. ~~Add global exception handler~~ — DONE
+~~Create `@ControllerAdvice` with handlers for validation errors, 404s, and 500s.~~
+Implemented as `GlobalExceptionHandler` with `@RestControllerAdvice`. Handles `MethodArgumentNotValidException`, `ConstraintViolationException`, and generic `Exception`.
 
 ### 8. Add request/response logging interceptor — MEDIUM
 Log incoming requests and outgoing responses with timing, using a `HandlerInterceptor`.
@@ -50,8 +51,9 @@ Map postcode prefixes to synthetic risk zones and apply a location multiplier in
 
 ## Performance
 
-### 13. Add caching for provider data — EASY
-Use `@Cacheable` on `ProviderService.getAllProviders()` with Spring Cache abstraction.
+### 13. ~~Add caching for provider data~~ — DONE
+~~Use `@Cacheable` on `ProviderService.getAllProviders()` with Spring Cache abstraction.~~
+Implemented with `@Cacheable("providers")` on `getAllProviders()` and `@Cacheable("provider")` on `getProviderById()`. `CacheConfig` enables caching via `@EnableCaching`.
 
 ### 14. Add async quote calculation — MEDIUM
 Use `@Async` or `CompletableFuture` to calculate quotes per provider in parallel.
@@ -100,3 +102,19 @@ Full Spring Boot integration tests with real H2 database, verifying seed data an
 
 ### 25. Add OpenAPI contract tests — MEDIUM
 Validate that API responses match the OpenAPI spec using springdoc + assertj.
+
+---
+
+## Completed Features
+
+### 26. ~~Geolocated Maps Feature~~ — DONE
+Interactive Leaflet.js maps showing provider locations on quote results and provider detail pages.
+
+**What was delivered:**
+- **Backend Architecture:** Introduced DTO layer (`ProviderDto`, `ProviderLocationDto`, `CoverageOptionDto`), shared mapper abstraction (`ProviderMapper`, `QuoteMapper`), abstract ranking base class (Template Method pattern), service layer fix (`QuoteService` → `ProviderService`), caching (`@Cacheable`), global exception handler (`@RestControllerAdvice`)
+- **Data Layer:** Added `latitude`/`longitude` to `Provider` entity, seeded UK coordinates for all 8 providers, threaded lat/lng through `QuoteResult` and `QuoteResultDto`
+- **Services:** `GeocodingService` (UK postcode prefix → coordinates lookup, ~30 outward codes), `DistanceUtil` (Haversine formula)
+- **Feature Flag:** `mapEnabled` toggle in `FeatureFlagConfig`, admin panel toggle switch
+- **Map API:** `MapApiController` at `/api/map/providers` (with postcode+radius filtering) and `/api/map/geocode`
+- **Frontend:** Leaflet.js multi-marker map on results page (user + provider markers, fit bounds), single-marker map on provider detail page, "Distance: Nearest" client-side sort option, conditional rendering via `th:if="${mapEnabled}"`
+- **Jira:** DEV-42 through DEV-53 (12 tickets under Epic DEV-41)

@@ -2,6 +2,7 @@ package com.compare.service;
 
 import com.compare.domain.Provider;
 import com.compare.repository.ProviderRepository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,10 +17,12 @@ public class ProviderService {
         this.providerRepository = providerRepository;
     }
 
+    @Cacheable("providers")
     public List<Provider> getAllProviders() {
         return providerRepository.findAll();
     }
 
+    @Cacheable(value = "provider", key = "#id")
     public Optional<Provider> getProviderById(Long id) {
         return providerRepository.findById(id);
     }

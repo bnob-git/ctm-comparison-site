@@ -4,7 +4,6 @@ import com.compare.config.FeatureFlagConfig;
 import com.compare.domain.Provider;
 import com.compare.domain.QuoteRequest;
 import com.compare.domain.QuoteResult;
-import com.compare.repository.ProviderRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -19,18 +18,18 @@ public class QuoteService {
 
     private static final Logger log = LoggerFactory.getLogger(QuoteService.class);
 
-    private final ProviderRepository providerRepository;
+    private final ProviderService providerService;
     private final PricingEngine pricingEngine;
     private final RankingService defaultRankingService;
     private final RankingService experimentalRankingService;
     private final FeatureFlagConfig featureFlagConfig;
 
-    public QuoteService(ProviderRepository providerRepository,
+    public QuoteService(ProviderService providerService,
                         PricingEngine pricingEngine,
                         @Qualifier("defaultRankingService") RankingService defaultRankingService,
                         @Qualifier("experimentalRankingService") RankingService experimentalRankingService,
                         FeatureFlagConfig featureFlagConfig) {
-        this.providerRepository = providerRepository;
+        this.providerService = providerService;
         this.pricingEngine = pricingEngine;
         this.defaultRankingService = defaultRankingService;
         this.experimentalRankingService = experimentalRankingService;
@@ -45,7 +44,7 @@ public class QuoteService {
                 request.getDriverAge(), request.getCarValue(), request.getPostcode(),
                 request.getAnnualMileage(), request.getClaimsInLastFiveYears(), request.getCoverLevel());
 
-        List<Provider> providers = providerRepository.findAll();
+        List<Provider> providers = providerService.getAllProviders();
         log.info("Found {} providers", providers.size());
 
         List<QuoteResult> results = pricingEngine.calculateQuotes(request, providers);

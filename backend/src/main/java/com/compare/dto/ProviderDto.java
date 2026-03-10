@@ -1,64 +1,23 @@
-package com.compare.domain;
+package com.compare.dto;
 
-import jakarta.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "providers")
-public class Provider {
+public class ProviderDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false)
     private String name;
-
-    @Column(nullable = false)
     private double baseRate;
-
-    @Column(nullable = false)
     private double riskMultiplier;
-
-    @Column(nullable = false)
     private double fixedFee;
-
-    @Column(nullable = false)
     private double rating;
-
-    @Column(length = 1000)
     private String features;
-
-    @Column(length = 1000)
     private String exclusions;
-
-    @Column(length = 500)
     private String assumptions;
-
-    @Column(length = 200)
-    private String logoPlaceholder;
-
     private Double latitude;
-
     private Double longitude;
+    private List<CoverageOptionDto> coverageOptions;
 
-    @OneToMany(mappedBy = "provider", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CoverageOption> coverageOptions = new ArrayList<>();
-
-    public Provider() {}
-
-    public Provider(String name, double baseRate, double riskMultiplier, double fixedFee,
-                    double rating, String features, String exclusions, String assumptions) {
-        this.name = name;
-        this.baseRate = baseRate;
-        this.riskMultiplier = riskMultiplier;
-        this.fixedFee = fixedFee;
-        this.rating = rating;
-        this.features = features;
-        this.exclusions = exclusions;
-        this.assumptions = assumptions;
-    }
+    public ProviderDto() {}
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -87,20 +46,12 @@ public class Provider {
     public String getAssumptions() { return assumptions; }
     public void setAssumptions(String assumptions) { this.assumptions = assumptions; }
 
-    public String getLogoPlaceholder() { return logoPlaceholder; }
-    public void setLogoPlaceholder(String logoPlaceholder) { this.logoPlaceholder = logoPlaceholder; }
-
     public Double getLatitude() { return latitude; }
     public void setLatitude(Double latitude) { this.latitude = latitude; }
 
     public Double getLongitude() { return longitude; }
     public void setLongitude(Double longitude) { this.longitude = longitude; }
 
-    public List<CoverageOption> getCoverageOptions() { return coverageOptions; }
-    public void setCoverageOptions(List<CoverageOption> coverageOptions) { this.coverageOptions = coverageOptions; }
-
-    public void addCoverageOption(CoverageOption option) {
-        coverageOptions.add(option);
-        option.setProvider(this);
-    }
+    public List<CoverageOptionDto> getCoverageOptions() { return coverageOptions; }
+    public void setCoverageOptions(List<CoverageOptionDto> coverageOptions) { this.coverageOptions = coverageOptions; }
 }

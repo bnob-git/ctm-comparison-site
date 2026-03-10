@@ -13,6 +13,8 @@ public class QuoteResult {
     private double score;
     private boolean isBestPrice;
     private boolean isRecommended;
+    private Double providerLatitude;
+    private Double providerLongitude;
 
     public QuoteResult() {}
 
@@ -48,4 +50,10 @@ public class QuoteResult {
 
     public boolean getIsRecommended() { return isRecommended; }
     public void setIsRecommended(boolean recommended) { isRecommended = recommended; }
+
+    public Double getProviderLatitude() { return providerLatitude; }
+    public void setProviderLatitude(Double providerLatitude) { this.providerLatitude = providerLatitude; }
+
+    public Double getProviderLongitude() { return providerLongitude; }
+    public void setProviderLongitude(Double providerLongitude) { this.providerLongitude = providerLongitude; }
 }
