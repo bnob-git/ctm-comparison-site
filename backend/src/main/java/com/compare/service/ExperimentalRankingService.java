@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service("experimentalRankingService")
 public class ExperimentalRankingService extends AbstractRankingService {
 
@@ -16,10 +18,14 @@ public class ExperimentalRankingService extends AbstractRankingService {
     }
 
     @Override
+    public List<QuoteResult> rank(List<QuoteResult> results) {
+        log.info("Using EXPERIMENTAL ranking algorithm");
+        return super.rank(results);
+    }
+
+    @Override
     protected double calculateScore(double normalizedPrice, double normalizedRating,
                                     double featureScore, QuoteResult result) {
-        log.info("Using EXPERIMENTAL ranking algorithm");
-
         // Value-for-money: rating per pound
         double valueScore = result.getRating() / (result.getAnnualPrice() / 1000.0);
         double normalizedValue = Math.min(valueScore / 10.0, 1.0);
