@@ -6,7 +6,7 @@ All providers, pricing, and data are **synthetic** — no real insurance product
 
 ## Tech Stack
 
-- **Backend:** Java 17, Spring Boot 3.2, Spring Data JPA, Thymeleaf
+- **Backend:** Java 20, Spring Boot 3.2, Spring Data JPA, Thymeleaf
 - **Database:** H2 (in-memory)
 - **UI:** Thymeleaf + Bootstrap 5 (CDN)
 - **API Docs:** SpringDoc OpenAPI (Swagger UI)
