@@ -62,6 +62,8 @@ public class DefaultPricingEngine implements PricingEngine {
             result.setFeatures(provider.getFeatures());
             result.setExclusions(provider.getExclusions());
             result.setCoverLevel(request.getCoverLevel());
+            result.setProviderLatitude(provider.getLatitude());
+            result.setProviderLongitude(provider.getLongitude());
 
             log.debug("Provider {}: annual={}, monthly={}", provider.getName(), annualPrice, monthlyPrice);
             results.add(result);

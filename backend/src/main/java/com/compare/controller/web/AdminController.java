@@ -37,6 +37,7 @@ public class AdminController {
         List<Provider> providers = providerService.getAllProviders();
         model.addAttribute("providers", providers);
         model.addAttribute("experimentalRanking", featureFlagConfig.isExperimentalRanking());
+        model.addAttribute("mapEnabled", featureFlagConfig.isMapEnabled());
         model.addAttribute("rankingConfig", rankingConfig);
         return "admin";
     }
@@ -48,6 +49,16 @@ public class AdminController {
         log.info("Experimental ranking toggled to: {}", enabled);
         redirectAttributes.addFlashAttribute("message",
                 "Experimental ranking " + (enabled ? "enabled" : "disabled"));
+        return "redirect:/admin";
+    }
+
+    @PostMapping("/admin/toggle-map")
+    public String toggleMap(@RequestParam(defaultValue = "false") boolean enabled,
+                            RedirectAttributes redirectAttributes) {
+        featureFlagConfig.setMapEnabled(enabled);
+        log.info("Map feature toggled to: {}", enabled);
+        redirectAttributes.addFlashAttribute("message",
+                "Map feature " + (enabled ? "enabled" : "disabled"));
         return "redirect:/admin";
     }
 }

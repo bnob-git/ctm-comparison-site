@@ -1,7 +1,10 @@
 package com.compare.controller;
 
 import com.compare.controller.api.QuoteApiController;
+import com.compare.domain.QuoteRequest;
 import com.compare.domain.QuoteResult;
+import com.compare.dto.QuoteResultDto;
+import com.compare.mapper.QuoteMapper;
 import com.compare.service.QuoteService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -30,6 +33,9 @@ class QuoteApiControllerTest {
     @MockBean
     private QuoteService quoteService;
 
+    @MockBean
+    private QuoteMapper quoteMapper;
+
     @Test
     void shouldReturnQuotesForValidRequest() throws Exception {
         QuoteResult result = new QuoteResult();
@@ -42,7 +48,20 @@ class QuoteApiControllerTest {
         result.setCoverLevel("comprehensive");
         result.setScore(0.8);
 
+        when(quoteMapper.toQuoteRequest(any())).thenReturn(
+                new QuoteRequest(30, 15000, "SW1A 1AA", 10000, 0, "comprehensive"));
         when(quoteService.getQuotes(any())).thenReturn(List.of(result));
+
+        QuoteResultDto.QuoteItemDto itemDto = new QuoteResultDto.QuoteItemDto();
+        itemDto.setProviderId(1L);
+        itemDto.setProviderName("TestProvider");
+        itemDto.setAnnualPrice(500.0);
+        itemDto.setMonthlyPrice(43.75);
+        itemDto.setRating(4.5);
+        itemDto.setFeatures("Feature1");
+        itemDto.setCoverLevel("comprehensive");
+        itemDto.setScore(0.8);
+        when(quoteMapper.toItemDto(any())).thenReturn(itemDto);
 
         String requestBody = """
                 {
@@ -81,7 +100,7 @@ class QuoteApiControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errors.driverAge").exists());
+                .andExpect(jsonPath("$.details.driverAge").exists());
     }
 
     @Test

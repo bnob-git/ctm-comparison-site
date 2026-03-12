@@ -52,6 +52,13 @@ public class DataSeeder implements CommandLineRunner {
             provider.setExclusions((String) data.get("exclusions"));
             provider.setAssumptions((String) data.get("assumptions"));
 
+            if (data.get("latitude") != null) {
+                provider.setLatitude(((Number) data.get("latitude")).doubleValue());
+            }
+            if (data.get("longitude") != null) {
+                provider.setLongitude(((Number) data.get("longitude")).doubleValue());
+            }
+
             List<Map<String, Object>> options = (List<Map<String, Object>>) data.get("coverageOptions");
             if (options != null) {
                 for (Map<String, Object> opt : options) {

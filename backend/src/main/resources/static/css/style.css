@@ -75,3 +75,16 @@ footer {
         transform: translateY(0);
     }
 }
+
+/* Map styles */
+.map-container-results {
+    height: 350px;
+    border-radius: 0.375rem;
+    border: 1px solid #dee2e6;
+    z-index: 0;
+}
+
+.map-container-detail {
+    height: 250px;
+    z-index: 0;
+}

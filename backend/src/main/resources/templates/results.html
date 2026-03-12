@@ -4,6 +4,7 @@
       layout:decorate="~{layout}">
 <head>
     <title>Quote Results</title>
+    <link th:if="${mapEnabled}" rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body>
 <main layout:fragment="content">
@@ -21,6 +22,9 @@
         </a>
     </div>
 
+    <div th:if="${mapEnabled}" id="provider-map" class="map-container-results mb-4"
+         th:data-user-lat="${userLat}" th:data-user-lng="${userLng}"></div>
+
     <div class="row mb-3">
         <div class="col-md-4">
             <label for="sortBy" class="form-label fw-bold">Sort by:</label>
@@ -29,6 +33,7 @@
                 <option value="price-asc">Price: Low to High</option>
                 <option value="price-desc">Price: High to Low</option>
                 <option value="rating">Rating: High to Low</option>
+                <option th:if="${mapEnabled}" value="distance">Distance: Nearest</option>
             </select>
         </div>
     </div>
@@ -37,7 +42,10 @@
         <div th:each="result : ${results}" class="card shadow-sm mb-3 result-card"
              th:data-price="${result.annualPrice}"
              th:data-rating="${result.rating}"
-             th:data-score="${result.score}">
+             th:data-score="${result.score}"
+             th:data-lat="${result.providerLatitude}"
+             th:data-lng="${result.providerLongitude}"
+             th:data-provider-name="${result.providerName}">
             <div class="card-body">
                 <div class="row align-items-center">
                     <div class="col-md-3">
@@ -97,5 +105,7 @@
         No quotes found for your criteria. Please try different options.
     </div>
 </main>
+<script th:if="${mapEnabled}" src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script th:if="${mapEnabled}" th:src="@{/js/map.js}"></script>
 </body>
 </html>

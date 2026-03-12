@@ -1,5 +1,6 @@
 package com.compare.controller.web;
 
+import com.compare.config.FeatureFlagConfig;
 import com.compare.domain.Provider;
 import com.compare.service.ProviderService;
 import org.springframework.stereotype.Controller;
@@ -13,9 +14,11 @@ import java.util.Optional;
 public class ProviderWebController {
 
     private final ProviderService providerService;
+    private final FeatureFlagConfig featureFlagConfig;
 
-    public ProviderWebController(ProviderService providerService) {
+    public ProviderWebController(ProviderService providerService, FeatureFlagConfig featureFlagConfig) {
         this.providerService = providerService;
+        this.featureFlagConfig = featureFlagConfig;
     }
 
     @GetMapping("/provider/{id}")
@@ -25,6 +28,7 @@ public class ProviderWebController {
             return "redirect:/";
         }
         model.addAttribute("provider", provider.get());
+        model.addAttribute("mapEnabled", featureFlagConfig.isMapEnabled());
         return "provider-detail";
     }
 }

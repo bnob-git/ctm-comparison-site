@@ -39,6 +39,7 @@ logging:
 # Feature flags
 feature:
   experimental-ranking: false
+  map-enabled: true
 
 # Ranking weights
 ranking:

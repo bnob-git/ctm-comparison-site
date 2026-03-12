@@ -4,6 +4,7 @@
       layout:decorate="~{layout}">
 <head>
     <title th:text="${provider.name}">Provider Details</title>
+    <link th:if="${mapEnabled}" rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 </head>
 <body>
 <main layout:fragment="content">
@@ -111,6 +112,19 @@
                 </div>
             </div>
 
+            <div th:if="${mapEnabled and provider.latitude != null and provider.longitude != null}"
+                 class="card shadow-sm mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="bi bi-geo-alt me-2"></i>Location</h5>
+                </div>
+                <div class="card-body p-0">
+                    <div id="provider-map" class="map-container-detail"
+                         th:data-lat="${provider.latitude}"
+                         th:data-lng="${provider.longitude}"
+                         th:data-name="${provider.name}"></div>
+                </div>
+            </div>
+
             <div class="d-grid gap-2">
                 <a th:href="@{/apply}" class="btn btn-primary btn-lg">
                     <i class="bi bi-arrow-right me-2"></i>Start Application
@@ -122,5 +136,7 @@
         </div>
     </div>
 </main>
+<script th:if="${mapEnabled}" src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script th:if="${mapEnabled}" th:src="@{/js/map.js}"></script>
 </body>
 </html>
